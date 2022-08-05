@@ -22,6 +22,7 @@ namespace ServerFramework
         {
             CloseConnection();
         }
+        bool isServerAlive = false;
         private int port;
         private List<request> posts;
         private List<request> gets;
@@ -69,6 +70,7 @@ namespace ServerFramework
 
         public void StartServer()
         {
+            if(isServerAlive) { return; }
             bool showtxt = false;
             Console.WriteLine("Show text recieved? (Y/N)");
             string input = Console.ReadLine();
@@ -95,6 +97,7 @@ namespace ServerFramework
                 Console.WriteLine("Waiting for a connection...");
                 while (true)
                 {
+                    isServerAlive = true;
                     Socket handler = listener.Accept();
                     Console.WriteLine("Connection began with " + IPAddress.Parse(((IPEndPoint)handler.LocalEndPoint).Address.ToString()));
 
@@ -144,7 +147,7 @@ namespace ServerFramework
                 }
                 //byte[] msg = Encoding.ASCII.GetBytes(data);
                 //handler.Send(msg);
-
+                isServerAlive = false;
             }
             catch (Exception e)
             {
@@ -179,6 +182,7 @@ namespace ServerFramework
             {
 
             }
+            isServerAlive = false;
         }
 
         void takeActions(string data, Socket handler)
